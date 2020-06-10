@@ -1,9 +1,14 @@
 <?php
-namespace App\Repositories\Contracts;
+namespace App\Repositories;
 
 interface UserRepositoryInterface
 {
-	
+   public function all();
+
+   public function find($id);
+
+   public function create($attributes);
+
    public function getAll();
 
    public function make(Array $data);
@@ -15,5 +20,4 @@ interface UserRepositoryInterface
    public function updateUser(Resquest $request, $user);
 
    public function destroyUser($user);
-
 }

@@ -1,0 +1,11 @@
+<?php
+namespace DummyNamespace;
+
+interface DummyClassRepositoryInterface
+{
+   public function all();
+
+   public function find($id);
+
+   public function create($attributes);
+}

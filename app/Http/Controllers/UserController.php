@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Traits\ApiResponser;
-use Illuminate\Http\Response;
-use Illuminate\Http\Request;
+use App\Http\Requests\LoginUser;
 use App\Http\Requests\StoreUser;
 use App\Http\Requests\UpdateUser;
-use App\Http\Requests\LoginUser;
-use App\Repositories\Contracts\UserRepositoryInterface;
+use App\Repositories\UserRepositoryInterface;
+use App\Traits\ApiResponser;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class UserController extends Controller
 {

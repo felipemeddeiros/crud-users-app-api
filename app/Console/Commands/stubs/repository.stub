@@ -1,0 +1,28 @@
+<?php
+
+namespace DummyNamespace;
+
+use App\Models\DummyClass;
+use App\Repositories\Eloquent\Base\BaseRepository;
+use App\Repositories\DummyClassRepositoryInterface;
+
+class DummyClassRepository extends BaseRepository implements DummyClassRepositoryInterface
+{
+    /**
+     * Métodos ja implementados pela BaseRepository
+     *
+     * @method Array create(Array $atribbutes)
+     * @method Array find(Integer $id)
+     * @method Array all()
+     */
+
+    /**
+     * DummyClassRepository constructor.
+     *
+     * @param DummyClass $model
+     */
+    public function __construct(DummyClass $model)
+    {
+        parent::__construct($model);
+    }
+}

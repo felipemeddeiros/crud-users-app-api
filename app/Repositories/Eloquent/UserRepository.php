@@ -1,78 +1,92 @@
 <?php
+
 namespace App\Repositories\Eloquent;
 
 use App\Models\User;
-use App\Repositories\Contracts\UserRepositoryInterface;
-use App\Traits\ApiResponser;
-use Illuminate\Http\Response;
+use App\Repositories\Eloquent\Base\BaseRepository;
+use App\Repositories\UserRepositoryInterface;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Auth\AuthenticationException;
-use Illuminate\Validation\ValidationException;
 
-class UserRepository implements UserRepositoryInterface
+class UserRepository extends BaseRepository implements UserRepositoryInterface
 {
-   use ApiResponser;
+    /**
+     * Métodos ja implementados pela BaseRepository
+     *
+     * @method Array create(Array $atribbutes)
+     * @method Array find(Integer $id)
+     * @method Array all()
+     */
 
-   public function getAll()
-   {
-      return User::latest()->get();
-   }
+    /**
+     * UserRepository constructor.
+     *
+     * @param User $model
+     */
+    public function __construct(User $model)
+    {
+        parent::__construct($model);
+    }
 
-   public function make($data) 
-   {
-      $data['password'] = Hash::make($data['password']);
+    public function getAll()
+    {
+        return $this->model->latest()->get();
+    }
 
-      $user = User::create($data);
-      $user->token = $user->createToken($user->email)->accessToken;
+    public function make($data)
+    {
+        $data['password'] = Hash::make($data['password']);
 
-      return $user;
-   }
+        $user        = $this->model->create($data);
+        $user->token = $user->createToken($user->email)->accessToken;
 
-   public function search($name)
-   {
-      return User::where('name', 'LIKE', '%'.$name.'%')->get();
-   }
+        return $user;
+    }
 
-   public function getUserById($user) 
-   {
-      $user = User::findOrfail($user);
+    public function search($name)
+    {
+        return $this->model->where('name', 'LIKE', '%' . $name . '%')->get();
+    }
 
-      return $user;
-   }
+    public function getUserById($user)
+    {
+        $user = $this->model->findOrfail($user);
 
-   public function updateUser($request, $user) 
-   {
-      $user = User::findOrFail($user);
+        return $user;
+    }
 
-      $user->fill($request->all());
+    public function updateUser($request, $user)
+    {
+        $user = $this->model->findOrFail($user);
 
-      if ($request->has('password')) {
-         $user->password = Hash::make($request->password);
-      }
+        $user->fill($request->all());
 
-      $user->save();
+        if ($request->has('password')) {
+            $user->password = Hash::make($request->password);
+        }
 
-      return $user;
-   }
+        $user->save();
 
-   public function destroyUser($user)
-   {
-      $user = User::findOrfail($user);
+        return $user;
+    }
 
-      $user->delete();
+    public function destroyUser($user)
+    {
+        $user = $this->model->findOrfail($user);
 
-      return $user;
-   }
+        $user->delete();
 
-   public function login($data) 
-   {
-      if(Auth::attempt(['email' => strtolower($data['email']), 'password' => $data['password']])) {
-         $user = auth()->user();
-         $user->token = $user->createToken($user->email)->accessToken;
-         return $user;
-      }
+        return $user;
+    }
 
-      throw new AuthenticationException('Login inválido');
-   }
+    public function login($data)
+    {
+        if (Auth::attempt(['email' => strtolower($data['email']), 'password' => $data['password']])) {
+            $user        = auth()->user();
+            $user->token = $user->createToken($user->email)->accessToken;
+            return $user;
+        }
+
+        throw new AuthenticationException('Login inválido');
+    }
 }
